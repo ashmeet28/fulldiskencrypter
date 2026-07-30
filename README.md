@@ -15,3 +15,7 @@ umount /mnt/fulldiskencrypter && rmdir /mnt/fulldiskencrypter
 
 - Put slash in the end of directory path `/mnt/fulldiskencrypter/`
 - Only use absolute paths
+
+## Latest Release
+
+SHA256SUM: 4cea26ace456e6c5dad92c9c17547639b52e2b4b6c7e2b5a6ffeaf90569da460
