@@ -62,11 +62,7 @@ func main() {
 		if (diskSize % 4096) != 0 {
 			log.Fatal(errors.New("invalid disk size"))
 		}
-		maxIoBlockSize := 67108864
-		ioBlockSize := maxIoBlockSize
-		for (diskSize % ioBlockSize) != 0 {
-			ioBlockSize = ioBlockSize / 2
-		}
+		ioBlockSize := 67108864
 
 		for i := 0; i < int(diskSize); i += ioBlockSize {
 			stdoutBuf := make([]byte, 0)
@@ -84,8 +80,7 @@ func main() {
 				" of=" + tmpfsDirPath + strconv.Itoa(i/ioBlockSize) +
 				" bs=" + strconv.Itoa(ioBlockSize) +
 				" skip=" + strconv.Itoa(i/ioBlockSize) +
-				" count=1" +
-				" status=none")
+				" count=1")
 
 			appendLineToStdoutBuf("[ $? -ne 0 ] && exit")
 
@@ -101,8 +96,7 @@ func main() {
 				" bs=" + strconv.Itoa(ioBlockSize) +
 				" seek=" + strconv.Itoa(i/ioBlockSize) +
 				" iflag=fullblock" +
-				" conv=notrunc" +
-				" status=none")
+				" conv=notrunc")
 
 			appendLineToStdoutBuf("[ $? -ne 0 ] && exit")
 
