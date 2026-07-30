@@ -56,8 +56,9 @@ func main() {
 			log.Fatal(err)
 		}
 		diskFilePath := os.Args[3]
-		encKeyFilePath := os.Args[4]
-		tmpfsDirPath := os.Args[5]
+		tmpfsDirPath := os.Args[4]
+		encKeyFilePath := tmpfsDirPath + "key"
+		outFilePath := tmpfsDirPath + "run"
 
 		if (diskSize % 4096) != 0 {
 			log.Fatal(errors.New("invalid disk size"))
@@ -111,7 +112,7 @@ func main() {
 			}
 		}
 
-		if err := os.WriteFile(tmpfsDirPath+"run", outFileBuf, 0600); err != nil {
+		if err := os.WriteFile(outFilePath, outFileBuf, 0600); err != nil {
 			log.Fatal(err)
 		}
 	default:
