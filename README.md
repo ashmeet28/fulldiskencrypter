@@ -12,5 +12,5 @@ fulldiskencrypter genrate_bash_file disk_size_in_bytes /dev/disk_block_device /m
 umount /mnt/fulldiskencrypter && rmdir /mnt/fulldiskencrypter
 ```
 
-Put slash in the end of directory path `/mnt/t/fulldiskencrypter/`
-Only use absolute paths
+- Put slash in the end of directory path `/mnt/t/fulldiskencrypter/`
+- Only use absolute paths
