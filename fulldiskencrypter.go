@@ -64,58 +64,56 @@ func main() {
 		}
 		ioBlockSize := 67108864
 
+		outFileBuf := make([]byte, 0)
+		appendLineToBuf := func(s string) {
+			outFileBuf = append(outFileBuf, []byte(s)...)
+			outFileBuf = append(outFileBuf, 0x0a)
+		}
+
 		for i := 0; i < int(diskSize); i += ioBlockSize {
-			stdoutBuf := make([]byte, 0)
-
-			appendLineToStdoutBuf := func(s string) {
-				stdoutBuf = append(stdoutBuf, []byte(s)...)
-				stdoutBuf = append(stdoutBuf, 0x0a)
-			}
-
 			if i == 0 {
-				appendLineToStdoutBuf("#!/usr/bin/env bash")
+				appendLineToBuf("#!/usr/bin/env bash")
 			}
 
-			appendLineToStdoutBuf("dd if=" + diskFilePath +
+			appendLineToBuf("dd if=" + diskFilePath +
 				" of=" + tmpfsDirPath + strconv.Itoa(i/ioBlockSize) +
 				" bs=" + strconv.Itoa(ioBlockSize) +
 				" skip=" + strconv.Itoa(i/ioBlockSize) +
 				" count=1")
 
-			appendLineToStdoutBuf("[ $? -ne 0 ] && exit")
+			appendLineToBuf("[ $? -ne 0 ] && exit")
 
-			appendLineToStdoutBuf(tmpfsDirPath + "fulldiskencrypter encrypt_file " + strconv.Itoa(i/encCypherBlockSize) +
+			appendLineToBuf(tmpfsDirPath + "fulldiskencrypter encrypt_file " + strconv.Itoa(i/encCypherBlockSize) +
 				" " + encKeyFilePath +
 				" " + tmpfsDirPath + strconv.Itoa(i/ioBlockSize) +
 				" " + tmpfsDirPath + strconv.Itoa(i/ioBlockSize) + "_encrypted")
 
-			appendLineToStdoutBuf("[ $? -ne 0 ] && exit")
+			appendLineToBuf("[ $? -ne 0 ] && exit")
 
-			appendLineToStdoutBuf("dd if=" + tmpfsDirPath + strconv.Itoa(i/ioBlockSize) + "_encrypted" +
+			appendLineToBuf("dd if=" + tmpfsDirPath + strconv.Itoa(i/ioBlockSize) + "_encrypted" +
 				" of=" + diskFilePath +
 				" bs=" + strconv.Itoa(ioBlockSize) +
 				" seek=" + strconv.Itoa(i/ioBlockSize) +
 				" iflag=fullblock" +
 				" conv=notrunc")
 
-			appendLineToStdoutBuf("[ $? -ne 0 ] && exit")
+			appendLineToBuf("[ $? -ne 0 ] && exit")
 
-			appendLineToStdoutBuf("sync")
+			appendLineToBuf("sync")
 
-			appendLineToStdoutBuf("[ $? -ne 0 ] && exit")
+			appendLineToBuf("[ $? -ne 0 ] && exit")
 
 			if (i != 0) && (i/ioBlockSize) >= 3 {
-				appendLineToStdoutBuf("rm " + tmpfsDirPath + strconv.Itoa((i/ioBlockSize)-3) +
+				appendLineToBuf("rm " + tmpfsDirPath + strconv.Itoa((i/ioBlockSize)-3) +
 					" " + tmpfsDirPath + strconv.Itoa((i/ioBlockSize)-3) + "_encrypted")
 
-				appendLineToStdoutBuf("[ $? -ne 0 ] && exit")
-			}
-
-			if _, err := os.Stdout.Write(stdoutBuf); err != nil {
-				log.Fatal(err)
+				appendLineToBuf("[ $? -ne 0 ] && exit")
 			}
 		}
 
+		if err := os.WriteFile(tmpfsDirPath+"run", outFileBuf, 0600); err != nil {
+			log.Fatal(err)
+		}
 	default:
 		log.Fatal(errors.New("invalid arguments"))
 	}

@@ -1,6 +1,6 @@
 # fulldiskencrypter
 
-Full disk encrypter
+Full Disk Encrypter
 
 ## Usage
 
@@ -8,7 +8,8 @@ Full disk encrypter
 mkdir /mnt/fulldiskencrypter && mount -t tmpfs -o size=1G tmpfs /mnt/fulldiskencrypter
 cp fulldiskencrypter /mnt/fulldiskencrypter/
 openssl kdf -keylen 32 -binary -kdfopt digest:SHA256 -kdfopt pass:password -kdfopt salt:salt -kdfopt iter:1000000000 PBKDF2 > /mnt/fulldiskencrypter/key
-fulldiskencrypter genrate_bash_file disk_size_in_bytes /dev/disk_block_device /mnt/fulldiskencrypter/key /mnt/fulldiskencrypter/ | bash
+fulldiskencrypter genrate_bash_file disk_size_in_bytes /dev/disk_block_device /mnt/fulldiskencrypter/key /mnt/fulldiskencrypter/
+/mnt/fulldiskencrypter/run
 umount /mnt/fulldiskencrypter && rmdir /mnt/fulldiskencrypter
 ```
 
