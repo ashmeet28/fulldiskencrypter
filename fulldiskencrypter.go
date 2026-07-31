@@ -70,10 +70,9 @@ func main() {
 			outFileBuf = append(outFileBuf, 0x0a)
 		}
 
+		appendLineToBuf("#!/usr/bin/env bash")
+
 		for i := 0; i < int(diskSize); i += ioBlockSize {
-			if i == 0 {
-				appendLineToBuf("#!/usr/bin/env bash")
-			}
 
 			appendLineToBuf("dd if=" + diskFilePath +
 				" of=" + tmpfsDirPath + strconv.Itoa(i/ioBlockSize) +
@@ -110,6 +109,7 @@ func main() {
 
 				appendLineToBuf("[ $? -ne 0 ] && exit")
 			}
+
 		}
 
 		if err := os.WriteFile(outFilePath, outFileBuf, 0600); err != nil {
