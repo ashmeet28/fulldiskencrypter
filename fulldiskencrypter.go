@@ -29,24 +29,23 @@ func main() {
 			log.Fatal(err)
 		}
 
-		curInBuf, err := os.ReadFile(inFilePath)
+		buf, err := os.ReadFile(inFilePath)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		if (len(curInBuf) % encCypherBlockSize) != 0 {
+		if (len(buf) % encCypherBlockSize) != 0 {
 			log.Fatal(errors.New("invalid input file size"))
 		}
 
-		curOutBuf := make([]byte, len(curInBuf))
-		for i := 0; i < len(curInBuf); i += encCypherBlockSize {
+		for i := 0; i < len(buf); i += encCypherBlockSize {
 			encHash := sha256.Sum256(binary.LittleEndian.AppendUint64(encKey, encCounter))
 			encCounter++
 			for j := range encCypherBlockSize {
-				curOutBuf[i+j] = curInBuf[i+j] ^ encHash[j]
+				buf[i+j] = buf[i+j] ^ encHash[j]
 			}
 		}
-		if err := os.WriteFile(outFilePath, curOutBuf, 0600); err != nil {
+		if err := os.WriteFile(outFilePath, buf, 0600); err != nil {
 			log.Fatal(err)
 		}
 
