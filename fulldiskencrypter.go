@@ -84,7 +84,8 @@ func main() {
 
 			appendLineToBuf("[ $? -ne 0 ] && exit")
 
-			appendLineToBuf(tmpfsDirPath + "fulldiskencrypter encrypt_file " + strconv.Itoa(i/encCypherBlockSize) +
+			appendLineToBuf(tmpfsDirPath + "fulldiskencrypter encrypt_file " +
+				strconv.Itoa(i/encCypherBlockSize) +
 				" " + encKeyFilePath +
 				" " + tmpfsDirPath + strconv.Itoa(i/ioBlockSize) +
 				" " + tmpfsDirPath + strconv.Itoa(i/ioBlockSize) + "_encrypted")
