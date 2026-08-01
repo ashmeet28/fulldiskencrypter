@@ -22,6 +22,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
+
 		encKeyFilePath := os.Args[3]
 		inFilePath := os.Args[4]
 		outFilePath := os.Args[5]
@@ -47,6 +48,7 @@ func main() {
 				buf[i+j] = buf[i+j] ^ encHash[j]
 			}
 		}
+
 		if err := os.WriteFile(outFilePath, buf, 0600); err != nil {
 			log.Fatal(err)
 		}
