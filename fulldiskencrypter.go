@@ -11,11 +11,13 @@ import (
 
 func main() {
 	opToExec := os.Args[1]
+
 	encCypherBlockSize := 32
 
 	switch opToExec {
 
 	case "encrypt_file":
+
 		encCounter, err := strconv.ParseUint(os.Args[2], 10, 64)
 		if err != nil {
 			log.Fatal(err)
@@ -50,10 +52,12 @@ func main() {
 		}
 
 	case "genrate_bash_file":
+
 		diskSize, err := strconv.Atoi(os.Args[2])
 		if err != nil {
 			log.Fatal(err)
 		}
+
 		diskFilePath := os.Args[3]
 		tmpfsDirPath := os.Args[4]
 		encKeyFilePath := tmpfsDirPath + "key"
@@ -62,9 +66,11 @@ func main() {
 		if (diskSize % 4096) != 0 {
 			log.Fatal(errors.New("invalid disk size"))
 		}
+
 		ioBlockSize := 67108864
 
 		outFileBuf := make([]byte, 0)
+
 		appendLineToBuf := func(s string) {
 			outFileBuf = append(outFileBuf, []byte(s)...)
 			outFileBuf = append(outFileBuf, 0x0a)
@@ -78,7 +84,8 @@ func main() {
 				" of=" + tmpfsDirPath + strconv.Itoa(i/ioBlockSize) +
 				" bs=" + strconv.Itoa(ioBlockSize) +
 				" skip=" + strconv.Itoa(i/ioBlockSize) +
-				" count=1")
+				" count=1" +
+				" status=none")
 
 			appendLineToBuf("[ $? -ne 0 ] && exit")
 
@@ -95,7 +102,8 @@ func main() {
 				" bs=" + strconv.Itoa(ioBlockSize) +
 				" seek=" + strconv.Itoa(i/ioBlockSize) +
 				" iflag=fullblock" +
-				" conv=notrunc")
+				" conv=notrunc" +
+				" status=none")
 
 			appendLineToBuf("[ $? -ne 0 ] && exit")
 
@@ -103,7 +111,7 @@ func main() {
 
 			appendLineToBuf("[ $? -ne 0 ] && exit")
 
-			if (i != 0) && (i/ioBlockSize) >= 3 {
+			if (i / ioBlockSize) >= 2 {
 				appendLineToBuf("rm " + tmpfsDirPath + strconv.Itoa((i/ioBlockSize)-3) +
 					" " + tmpfsDirPath + strconv.Itoa((i/ioBlockSize)-3) + "_encrypted")
 
@@ -115,7 +123,10 @@ func main() {
 		if err := os.WriteFile(outFilePath, outFileBuf, 0600); err != nil {
 			log.Fatal(err)
 		}
+
 	default:
+
 		log.Fatal(errors.New("invalid arguments"))
+
 	}
 }

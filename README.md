@@ -15,3 +15,7 @@ umount /mnt/fulldiskencrypter && rmdir /mnt/fulldiskencrypter
 
 - Put slash in the end of directory path `/mnt/fulldiskencrypter/`
 - Only use absolute paths
+
+```
+fulldiskencrypter encrypt_file block_counter /mnt/fulldiskencrypter/key /mnt/fulldiskencrypter/input_file /mnt/fulldiskencrypter/output_file
+```
